@@ -16,9 +16,9 @@ Inspired by [Year Progress Twitter](https://twitter.com/year_progress)
 
 ## Developement
 
-`git clone https://github.com/mubaris/year_left.git`
+`git clone https://github.com/mubaris/year_progress.git`
 
-`cd year_left`
+`cd year_progress`
 
 `yarn`
 
