@@ -14,6 +14,18 @@ Inspired by [Year Progress Twitter](https://twitter.com/year_progress)
 
 [Chrome Store](https://chrome.google.com/webstore/detail/hmejblemllciaklhffpinjgkbngcoopb/)
 
+## Developement
+
+`git clone https://github.com/mubaris/year_left.git`
+
+`cd year_left`
+
+`yarn`
+
+`yarn run build`
+
+**Load Unpacked Extension from `build` directory**
+
 ## Tools
 
 * React ⚛
