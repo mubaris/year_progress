@@ -111,7 +111,7 @@ class App extends Component {
         this.setState({ percent, perc });
       }
       this.setState({ percent });
-    }, 50);
+    }, 250);
   }
   render() {
     return (
@@ -134,7 +134,7 @@ class App extends Component {
         </Percent>
         <DateDiv>
           <div>
-            {moment().format("dddd, MMMM Do YYYY, HH:mm:ss:SSS")}
+            {moment().format("dddd, MMMM Do YYYY, HH:mm:ss")}
           </div>
         </DateDiv>
         <AuthorDiv>
