@@ -10,6 +10,8 @@ Get things done, Be motivated!
 
 Inspired by [Year Progress Twitter](https://twitter.com/year_progress)
 
+Checkout [Product Hunt](https://www.producthunt.com/posts/year-progress)
+
 ## Installation
 
 [Chrome Store](https://chrome.google.com/webstore/detail/hmejblemllciaklhffpinjgkbngcoopb/)
