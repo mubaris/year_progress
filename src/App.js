@@ -102,6 +102,9 @@ class App extends Component {
     const percent = duration * 100 / total;
     return percent.toFixed(10);
   }
+  shouldComponentUpdate() {
+  	return !document.hidden;
+  }
   componentDidMount() {
     setInterval(() => {
       const percent = this.calculatePercent();
