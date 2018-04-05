@@ -111,7 +111,7 @@ class App extends Component {
         this.setState({ percent, perc });
       }
       this.setState({ percent });
-    }, 250);
+    }, 50);
   }
   render() {
     return (
