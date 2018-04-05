@@ -46,9 +46,10 @@ const Header = styled.div`
 `
 
 const Percent = styled.div`
+  font-family: 'Source Code Pro', monospace;
   color: #ffffff;
   white-space: pre-wrap;
-  font-size: 150%;
+  font-size: 125%;
 `
 
 const DateDiv = styled.div`
@@ -146,6 +147,7 @@ class App extends Component {
 
 injectGlobal`
   @import url('https://fonts.googleapis.com/css?family=Raleway');
+  @import url('https://fonts.googleapis.com/css?family=Source+Code+Pro');
 
   html, body {
     height: 100%;
