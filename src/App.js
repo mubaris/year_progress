@@ -2,6 +2,13 @@ import React, { Component } from 'react';
 import styled, { injectGlobal } from 'styled-components';
 import { Line } from 'rc-progress';
 import moment from 'moment';
+import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import faBars from '@fortawesome/fontawesome-free-solid/faBars';
+import Rodal from 'rodal';
+
+import 'rodal/lib/rodal.css';
+import './App.css';
+
 
 const gradients = [
   'background:linear-gradient(135deg, #CE9FFC 0%,#7367F0 100%);',
@@ -77,6 +84,15 @@ const AuthorDiv = styled.div`
   }
 `;
 
+const SettingsDiv = styled.div`
+  display: flex;
+  position: absolute;
+  top: 2.5%;
+  right: 1.75%;
+  margin: 0 0 1% 1%;
+  color: #ffffff;
+`;
+
 const progressStyles = {
   width: '25%',
   height: '5%',
@@ -89,21 +105,72 @@ class App extends Component {
     super(props);
     this.state = {
       percent: 0,
-      perc: 0
+      perc: 0,
+      metric: localStorage.getItem('metric') || 'year',
+      visible: false,
+      decimal: localStorage.getItem('decimal') || 10,
+      decimalForm: localStorage.getItem('decimal') || 10,
+      metricForm: localStorage.getItem('metric') || 'year'
     };
-    this.calculatePercent = this.calculatePercent.bind(this)
+    this.calculatePercent = this.calculatePercent.bind(this);
+    this.changeMetric = this.changeMetric.bind(this);
+    this.showSettings = this.showSettings.bind(this);
+    this.closeSettings = this.closeSettings.bind(this);
+    this.formDec = this.formDec.bind(this);
+    this.formMetric = this.formMetric.bind(this);
+    this.saveSettings = this.saveSettings.bind(this);
+  }
+  saveSettings() {
+    const decimal = this.state.decimalForm;
+    localStorage.setItem('decimal', decimal);
+    const metric = this.state.metricForm;
+    localStorage.setItem('metric', metric);
+    this.setState({ decimal, metric, visible: false });
+  }
+  formMetric(event) {
+    this.setState({ metricForm: event.target.value });
+  }
+  formDec(event) {
+    this.setState({ decimalForm: event.target.value });
+  }
+  showSettings() {
+    this.setState({ visible: true });
+  }
+  closeSettings() {
+    this.setState({ visible: false });
+  }
+  changeMetric() {
+    const currentMetric = this.state.metric;
+    switch (currentMetric) {
+      case 'year':
+        this.setState({ metric: 'day' });
+        localStorage.setItem('metric', 'day');
+        break;
+      case 'month':
+        this.setState({ metric: 'year' });
+        localStorage.setItem('metric', 'year');
+        break;
+      case 'day':
+        this.setState({ metric: 'month' });
+        localStorage.setItem('metric', 'month');
+        break;
+      default:
+        this.setState({ metric: 'year' })
+        localStorage.setItem('metric', 'year');
+        break;
+    }
   }
   calculatePercent() {
-    const start = moment().startOf('year');
-    const end = moment().endOf('year');
+    const start = moment().startOf(this.state.metric);
+    const end = moment().endOf(this.state.metric);
     const now = moment();
     const duration = moment.duration(now.diff(start)).asMilliseconds();
     const total = moment.duration(end.diff(start)).asMilliseconds();
     const percent = duration * 100 / total;
-    return percent.toFixed(10);
+    return percent.toFixed(this.state.decimal);
   }
   shouldComponentUpdate() {
-  	return !document.hidden;
+    return !document.hidden;
   }
   componentDidMount() {
     setInterval(() => {
@@ -117,24 +184,33 @@ class App extends Component {
     }, 50);
   }
   render() {
+    const metric = this.state.metric;
+    const displayMetric = metric.charAt(0).toUpperCase() + metric.slice(1).toLowerCase();
     return (
       <CenterDiv>
         <Header>
-          <h1>Year Progress</h1>
+          <h1>
+            <span onClick={this.changeMetric} style={{cursor: "pointer"}}>
+              {displayMetric}
+            </span> Progress
+          </h1>
         </Header>
-        <Line 
+        <Line
           percent={this.state.perc}
-          strokeWidth={1} 
-          strokeColor="#ffffff" 
+          strokeWidth={1}
+          strokeColor="#ffffff"
           trailColor="#2db7f500"
           strokeLinecap="square"
-          style={progressStyles} 
+          style={progressStyles}
         >
           Some
         </Line>
         <Percent>
           <h1>{`${this.state.percent} %`}</h1>
         </Percent>
+        <SettingsDiv onClick={this.showSettings} style={{cursor: "pointer"}}>
+          <FontAwesomeIcon icon={faBars} size="lg" />
+        </SettingsDiv>
         <DateDiv>
           <div>
             {moment().format("dddd, MMMM Do YYYY, HH:mm:ss")}
@@ -143,6 +219,46 @@ class App extends Component {
         <AuthorDiv>
           <a href="https://twitter.com/Mubaris_NK" target="_blank" rel="noopener noreferrer">Made with ♥ by Mubaris NK</a>
         </AuthorDiv>
+        <Rodal visible={this.state.visible} onClose={this.closeSettings}>
+          <div className="header">Settings</div>
+          <div className="body">
+            <div className="form-content">
+              <label>
+                {'Number of decimal points: '}
+                <select value={this.state.decimalForm} onChange={this.formDec}>
+                  <option value={2}>2</option>
+                  <option value={3}>3</option>
+                  <option value={4}>4</option>
+                  <option value={5}>5</option>
+                  <option value={6}>6</option>
+                  <option value={7}>7</option>
+                  <option value={8}>8</option>
+                  <option value={9}>9</option>
+                  <option value={10}>10</option>
+                </select>
+              </label>
+            </div>
+            <div className="form-content">
+              <label>
+                {'Progress Bar Metric: '}
+                <select value={this.state.metricForm} onChange={this.formMetric}>
+                  <option value={'day'}>Day</option>
+                  <option value={'month'}>Month</option>
+                  <option value={'year'}>Year</option>
+                </select>
+              </label>
+            </div>
+            <a href="https://buymeacoff.ee/mubaris" target="_blank" className="rodal-bottom" rel="noopener noreferrer">
+              <img src="bmc.png" alt="Buy Me A Coffee" />
+            </a>
+          </div>
+          <button className="rodal-confirm-btn" onClick={this.saveSettings} style={{cursor: "pointer"}}>
+            Save
+          </button>
+          <button className="rodal-cancel-btn" onClick={this.closeSettings} style={{cursor: "pointer"}}>
+            Close
+          </button>
+        </Rodal>
       </CenterDiv>
     );
   }
@@ -170,6 +286,68 @@ injectGlobal`
   }
   .rc-progress-line-path {
     animation: progress-bar 2.5s linear infinite;
+  }
+
+  .header {
+    font-size: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e9e9e9;
+  }
+
+  /* -- body -- */
+  .body {
+    padding-top: 15px;
+  }
+
+  .rodal-cancel-btn, .rodal-confirm-btn {
+    position: absolute;
+    font: inherit;
+    bottom: 16px;
+    display: inline-flex;
+    align-items: center; /* cross axis */
+    justify-content: center; /* main axis */
+
+    line-height: 1;
+    padding: 4px 15px;
+    border-radius: 3px;
+    transition: background .2s;
+    border: 1px solid #03a9f4;
+  }
+  .rodal-confirm-btn {
+    color: #fff;
+    right: 102px;
+    background: #03a9f4;
+    height: 41px;
+  }
+  .rodal-confirm-btn:hover {
+    background: #0098e3;
+  }
+  .rodal-cancel-btn {
+    color: #03a9f4;
+    right: 16px;
+    background: #fff;
+    height: 41px;
+  }
+  .rodal-cancel-btn:hover {
+    background: #fafafa;
+  }
+  .rodal-cancel-btn:focus, .rodal-confirm-btn:focus {
+    outline: none;
+  }
+  .rodal-confirm-btn:active {
+    background: #0087d2;
+  }
+  .rodal-cancel-btn:active {
+    background: #fafafa;
+    box-shadow: inset 1px 1px 1px rgba(0,0,0,.2),0 0 1px transparent;
+  }
+  .rodal-bottom {
+    position: absolute;
+    font: inherit;
+    bottom: 16px;
+    display: inline-flex;
+    align-items: center; /* cross axis */
+    justify-content: center; /* main axis */
   }
 `;
 
