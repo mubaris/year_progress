@@ -143,19 +143,23 @@ class App extends Component {
     const currentMetric = this.state.metric;
     switch (currentMetric) {
       case 'year':
-        this.setState({ metric: 'day' });
+        this.setState({ metric: 'day', metricForm: 'day' });
         localStorage.setItem('metric', 'day');
         break;
       case 'month':
-        this.setState({ metric: 'year' });
+        this.setState({ metric: 'year', metricForm: 'year' });
         localStorage.setItem('metric', 'year');
         break;
-      case 'day':
-        this.setState({ metric: 'month' });
+      case 'week':
+        this.setState({ metric: 'month', metricForm: 'month' });
         localStorage.setItem('metric', 'month');
         break;
+      case 'day':
+        this.setState({ metric: 'week', metricForm: 'week' });
+        localStorage.setItem('metric', 'week');
+        break;
       default:
-        this.setState({ metric: 'year' })
+        this.setState({ metric: 'year', metricForm: 'year' });
         localStorage.setItem('metric', 'year');
         break;
     }
@@ -174,6 +178,9 @@ class App extends Component {
   }
   componentDidMount() {
     setInterval(() => {
+      const metric = this.state.metric;
+      const displayMetric = metric.charAt(0).toUpperCase() + metric.slice(1).toLowerCase();
+      document.title = `New Tab - ${displayMetric} Progress`;
       const percent = this.calculatePercent();
       const oldPerc = this.state.perc;
       const perc = parseFloat(percent).toFixed(2);
@@ -243,6 +250,7 @@ class App extends Component {
                 {'Progress Bar Metric: '}
                 <select value={this.state.metricForm} onChange={this.formMetric}>
                   <option value={'day'}>Day</option>
+                  <option value={'week'}>Week</option>
                   <option value={'month'}>Month</option>
                   <option value={'year'}>Year</option>
                 </select>

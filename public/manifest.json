@@ -13,7 +13,7 @@
     {
         "newtab": "index.html"
     },
-    "version": "2.0",
+    "version": "2.1",
     "web_accessible_resources": [
         "index.html"
     ]
